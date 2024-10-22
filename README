@@ -1,0 +1,16 @@
+# Under Development
+考慮增加行為箱功能：
+1. 可以定義順序，改python
+2. 新增輸入mode 2時間，改Arduino 
+3. 列印一個垂直的固定座
+4. 大鼠藝術女神雕像
+
+---
+# 潛在BUG
+1. 如果在紅點下待太久會出現觸發LED CUE錯誤的問題。
+
+---
+# Others
+3D tracker
+- official doc when behavior box be setup: [[3DTracker Doc for v180924 (under refinement).pdf]]
+- [3DTracker-FAB documentation — 3DTrackerFAB-doc documentation](https://3dtrackerfab.readthedocs.io/en/latest/)
