@@ -1,0 +1,36 @@
+[general]
+version = 4
+name = PETG 15May tz
+definition = creality_base
+
+[metadata]
+quality_type = standard
+type = quality_changes
+position = 0
+intent_category = default
+setting_version = 23
+
+[values]
+infill_material_flow = 110.0
+infill_pattern = cubicsubdiv
+infill_sparse_density = 15
+line_width = 0.38
+material_print_temperature = 240.0
+skirt_line_count = 4
+speed_print = 45.0
+speed_print_layer_0 = 7.0
+speed_travel = 100.0
+speed_travel_layer_0 = 75.0
+support_angle = 51.0
+support_infill_rate = 12.0
+support_interface_density = 25.0
+support_interface_pattern = lines
+support_tree_branch_diameter = 6
+support_xy_distance = 0.9
+support_z_distance = 0.16
+top_bottom_thickness = 0.6
+wall_line_count = 5
+wall_thickness = 1.6
+xy_offset_layer_0 = -0.3
+zig_zaggify_infill = True
+
