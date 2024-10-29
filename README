@@ -15,3 +15,48 @@
 3D tracker
 - official doc when behavior box be setup: [[3DTracker Doc for v180924 (under refinement).pdf]]
 - [3DTracker-FAB documentation — 3DTrackerFAB-doc documentation](https://3dtrackerfab.readthedocs.io/en/latest/)
+
+
+
+《需求列表》
+
+🙌直立式給水器｛站立｝
+—
+🫥針對每次水量限制問題+鼠鼠會扒上去/電線被3D tracker抓到難濾掉的問題
+sol1. 把馬達架高、深度變深、上面也要做高擋起來
+—
+🫥瀑布自助餐問題
+sol2. 中繼出水孔（鼠鼠舔的地方）深度挖深一點（？）可以小小裝水、累積到某個水量再流掉
+sol3. 換材質
+
+🫥給水時間random除錯困難的問題
+sol4. 新增輸入mode 2時間，改Arduino
+
+🙌掛勾式給水平台｛左右｝
+—
+🫥鼠鼠頭上線會勾到方形轉角的問題
+sol5. 把平台改半圓（包含底部也是弧狀）
+sol6. 把平台改高一點，增加鼠鼠底下通過空間
+
+🫥鼠鼠選錯邊依舊會給reward的殘水問題
+sol7. 直接改code，把紅點以外的其他點作為判斷是否走對邊的檢查點，判斷正確才出水
+
+🫥出水針頭因為各種水壓阻塞底座不穩導致需一直調整的問題
+sol8. 印一個針頭固定座
+
+🙌銅網上的線路
+—
+🫥線路時常接觸不良的問題
+sol9. 焊起來一勞永逸（嗎
+sol10. 應歪歪要求封裝起來
+sol11. 更新乖乖、改善風水佈局
+sol12. 3D列印鼠鼠女神像祭壇
+
+🙌其他
+—
+🫥LED燈會不定時左右亂閃
+sol13. 改善code
+sol14. 買更多乖乖
+
+🫥忘記這是指什麼了XD👇
+可以定義順序，改python
