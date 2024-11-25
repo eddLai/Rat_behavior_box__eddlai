@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # 設定虛擬環境的 Python 路徑
-PYTHON_PATH="/home/yylab-win7/桌面/Action Behavior Box_camera_detect/venv/bin/python"
-SCRIPT_PATH="/home/yylab-win7/桌面/Action Behavior Box_camera_detect/two_camera_videos_diff_v3_Uart.py"
+PYTHON_PATH="/home/ntk-win7/Desktop/Rat_behavior_box__eddlai/venv/bin/python"
+SCRIPT_PATH="/home/ntk-win7/Desktop/Rat_behavior_box__eddlai/python_to_detect_rat_at_point/two_camera_videos_diff_Uart_blah.py"
 
 echo "whether to update the baseline? type 1 for yes, else no"
 read choice
