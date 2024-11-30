@@ -118,6 +118,17 @@ void loop() {
 }
 
 ///////////////// left right mode /////////////////////
+bool isBlinking = false; // 新增變數來標記是否正在閃爍
+
+void resetState() {
+  isObstacle_M = false;
+  isObstacle_L = false;
+  isObstacle_R = false;
+  ans = 0;
+  taskInProgress = false;
+  isBlinking = false; // 重置閃爍標誌
+}
+
 void left_right() {
   if (MySerial.available() > 0) {
     receivedChar = MySerial.read();
@@ -129,6 +140,47 @@ void left_right() {
       Serial.println("Sudden stop");
       resetState();
       return;
+    }
+
+    // 如果處於閃爍過程中，優先處理 'R' 或 'L'
+    if (isBlinking) {
+      if (receivedChar == 'R' && ans == 2 && !isObstacle_R) {
+        // 正確走右邊
+        Serial.println("Right signal received: Correct side");
+        isObstacle_R = true;
+        digitalWrite(reward_R, LOW); // 激活右側馬達
+        Serial.println("Right reward start");
+        delay(reward_time);
+        digitalWrite(reward_R, HIGH); // 停止馬達
+        Serial.println("Right reward finish");
+        resetState(); // 重置狀態
+        isBlinking = false; // 閃爍結束，重新設置標誌
+        return; // 直接返回
+      } else if (receivedChar == 'L' && ans == 1 && !isObstacle_L) {
+        // 正確走左邊
+        Serial.println("Left signal received: Correct side");
+        isObstacle_L = true;
+        digitalWrite(reward_L, LOW); // 激活左側馬達
+        Serial.println("Left reward start");
+        delay(reward_time);
+        digitalWrite(reward_L, HIGH); // 停止馬達
+        Serial.println("Left reward finish");
+        resetState(); // 重置狀態
+        isBlinking = false; // 閃爍結束，重新設置標誌
+        return; // 直接返回
+      } else if (receivedChar == 'R' && ans == 1) {
+        // 走錯了，應該走左邊
+        Serial.println("Right signal received: Wrong side, expected Left");
+        resetState();
+        isBlinking = false; // 閃爍結束，重新設置標誌
+        return;
+      } else if (receivedChar == 'L' && ans == 2) {
+        // 走錯了，應該走右邊
+        Serial.println("Left signal received: Wrong side, expected Right");
+        resetState();
+        isBlinking = false; // 閃爍結束，重新設置標誌
+        return;
+      }
     }
 
     // 如果碰到紅點 (M)，隨機決定任務方向
@@ -147,13 +199,14 @@ void left_right() {
       // LED 閃爍
       int led1 = (ans == 1) ? LED_L1 : LED_R1;
       int led2 = (ans == 1) ? LED_L2 : LED_R2;
-      isBlinking = true;
+      isBlinking = true; // 開始閃爍時設定為 true
       for (int i = 1; i < 15; i++) {
         if (MySerial.available() > 0) {
           char tempChar = MySerial.read();
           if (tempChar == 'D') {
             Serial.println("Stop command received during blinking");
             resetState();
+            isBlinking = false; // 停止閃爍
             return; // 如果收到 'D'，立即結束閃爍
           }
         }
@@ -165,45 +218,14 @@ void left_right() {
         delay(167);
         digitalWrite(led2, LOW);
       }
-      isBlinking = false;
+      isBlinking = false; // 閃爍結束後設定為 false
 
       Serial.println("LED blinking finished. Waiting for 'R' or 'L'.");
       return;
     }
-
-    if (isObstacle_M) {
-      if (receivedChar == 'R' && ans == 2 && !isObstacle_R) {
-        // 正確走右邊
-        Serial.println("Right signal received: Correct side");
-        isObstacle_R = true;
-        digitalWrite(reward_R, LOW); // 激活右側馬達
-        Serial.println("right reward start");
-        delay(reward_time);
-        digitalWrite(reward_R, HIGH); // 停止馬達
-        Serial.println("right reward finish");
-        resetState(); // 重置狀態
-      } else if (receivedChar == 'L' && ans == 1 && !isObstacle_L) {
-        // 正確走左邊
-        Serial.println("Left signal received: Correct side");
-        isObstacle_L = true;
-        digitalWrite(reward_L, LOW); // 激活左側馬達
-        Serial.println("left reward start");
-        delay(reward_time);
-        digitalWrite(reward_L, HIGH); // 停止馬達
-        Serial.println("left reward finish");
-        resetState(); // 重置狀態
-      } else if (receivedChar == 'R' && ans == 1) {
-        // 走錯了，應該走左邊
-        Serial.println("Right signal received: Wrong side, expected Left");
-        resetState();
-      } else if (receivedChar == 'L' && ans == 2) {
-        // 走錯了，應該走右邊
-        Serial.println("Left signal received: Wrong side, expected Right");
-        resetState();
-      }
-    }
   }
 }
+
 
 // 重置狀態
 void resetState() {
