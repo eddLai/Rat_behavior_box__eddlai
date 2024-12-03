@@ -118,7 +118,6 @@ void loop() {
 }
 
 ///////////////// left right mode /////////////////////
-bool isBlinking = false; // 新增變數來標記是否正在閃爍
 
 void resetState() {
   isObstacle_M = false;
@@ -224,17 +223,6 @@ void left_right() {
       return;
     }
   }
-}
-
-
-// 重置狀態
-void resetState() {
-  isObstacle_M = false;
-  isObstacle_L = false;
-  isObstacle_R = false;
-  ans = 0;
-  taskInProgress = false;
-  isBlinking = false;
 }
 
 
