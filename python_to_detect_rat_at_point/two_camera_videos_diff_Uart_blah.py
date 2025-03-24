@@ -116,6 +116,7 @@ def pin_output_ifs(x, y, distance_from_target=40):
     elif np.abs(x - circle_pos_list[2][1]) < distance_from_target and np.abs(y -circle_pos_list[2][2]) < distance_from_target:
         send_signal_to_arduino(PORT, 115200, 'R')
         print("Right cue")
+        
     elif np.abs(x - circle_pos_list[5][1]) < distance_from_target and np.abs(y - circle_pos_list[5][2]) < distance_from_target:
         send_signal_to_arduino(PORT, 115200, 'D')
         print("RD")
