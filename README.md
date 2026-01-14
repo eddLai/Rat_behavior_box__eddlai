@@ -108,6 +108,7 @@ digitalWrite(reward_L, HIGH); // 停止
 // v5使用伺服馬達
 reward_L.write(114);  // 激活
 reward_L.write(90);   // 停止
+```
 ---
 
 # Others
