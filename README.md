@@ -8,7 +8,7 @@
 | **v3** | 新增正確回應判斷 | 繼電器 (relay) | 阻塞式 (blocking) | 修正獎勵邏輯 |
 | **v4** | 非阻塞式處理 | 繼電器 (relay) | 非阻塞式 (non-blocking) | 解決延遲問題 |
 | **v5** | 伺服馬達版本 | 伺服馬達 (servo) | 非阻塞式 (non-blocking) | 硬體更新 |
-| **v6** | 純左右模式 | 伺服馬達 (servo) | 非阻塞式 (non-blocking) | 移除模式選擇 |
+| **v6** | 純左右轉模式 | 伺服馬達 (servo) | 非阻塞式 (non-blocking) | 移除模式選擇 |
 
 ---
 
@@ -113,7 +113,7 @@ reward_L.write(90);   // 停止
 
 ---
 
-### v6 - 純左右模式版本 (為避免 50Hz 雜訊)
+### v6 - 純左右模式版本 (為排除 50Hz 雜訊)
 **檔案位置**: `Arduino_UART_from_python/UART_left_right_dir_deter_v6/`
 
 **核心改進**:
