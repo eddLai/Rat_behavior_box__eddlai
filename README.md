@@ -8,6 +8,7 @@
 | **v3** | 新增正確回應判斷 | 繼電器 (relay) | 阻塞式 (blocking) | 修正獎勵邏輯 |
 | **v4** | 非阻塞式處理 | 繼電器 (relay) | 非阻塞式 (non-blocking) | 解決延遲問題 |
 | **v5** | 伺服馬達版本 | 伺服馬達 (servo) | 非阻塞式 (non-blocking) | 硬體更新 |
+| **v6** | 純左右模式 | 伺服馬達 (servo) | 非阻塞式 (non-blocking) | 移除模式選擇 |
 
 ---
 
@@ -109,6 +110,41 @@ digitalWrite(reward_L, HIGH); // 停止
 reward_L.write(114);  // 激活
 reward_L.write(90);   // 停止
 ```
+
+---
+
+### v6 - 純左右模式版本 (為避免 50Hz 雜訊)
+**檔案位置**: `Arduino_UART_from_python/UART_left_right_dir_deter_v6/`
+
+**核心改進**:
+- ✅ **移除模式選擇**: 開機自動進入 Mode 1（左右轉任務）
+- ✅ **即插即用**: 按 reset 鍵或接上行動電源立即啟動
+- ✅ **精簡程式碼**: 移除 Mode 2/3 相關程式碼
+- ✅ **獨立供電友善**: 不需連接電腦選擇模式，適合使用行動電源
+
+**使用情境**:
+- Arduino 改用行動電源供電，避免電腦 USB 雜訊干擾
+- 不需要透過 MobaXterm 選擇模式
+- 專注於左右轉任務實驗
+
+**與 v5 的差異**:
+```cpp
+// v5: 需要等待模式選擇
+while (Serial.available() == 0) {
+  // 等待用戶輸入 '1', '2', '3'
+}
+
+// v6: 直接啟動
+Serial.println("Camera detection mode (left-right task) started automatically");
+```
+
+**功能保留**:
+- 伺服馬達控制 (reward_L: pin 10, reward_R: pin 9)
+- 非阻塞式 LED 閃爍
+- 正確回應判斷 (只有走對邊才給水)
+- 獎勵時間: 300ms
+- LED pin: L1/L2 (pin 12/13), R1/R2 (pin 6/7)
+
 ---
 
 # Others
