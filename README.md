@@ -1,5 +1,5 @@
 ## Now Operating Version...
-- **Arduino for Cue and Reward**: [`UART_left_right_dir_deter_v5.ino`](Arduino_UART_from_python/UART_left_right_dir_deter_v5/UART_left_right_dir_deter_v5.ino)
+- **Arduino for Cue and Reward**: [`UART_left_right_dir_deter_v7.ino`](Arduino_UART_from_python/UART_left_right_dir_deter_v7/UART_left_right_dir_deter_v7.ino)
 - **Camera for Rat Position**: [`python_to_detect_rat_at_point/two_camera_videos_diff_Uart_blah.py`](python_to_detect_rat_at_point/two_camera_videos_diff_Uart_blah.py)
 ---
 
