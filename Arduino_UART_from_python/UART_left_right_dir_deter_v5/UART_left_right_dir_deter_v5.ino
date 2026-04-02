@@ -22,6 +22,7 @@ char receivedChar; // 宣告字符變量
 String time_duration;
 long f_interval;
 int mode = 0; // 模式選擇變量
+int lastMode = 0; // 記錄上一次的模式，用於偵測模式切換
 int trial = 0; // 計算當前的trial次數
 
 bool isObstacle_M = false;  // IR sensor(中路)初始狀態
@@ -68,9 +69,9 @@ void setup() {
   pinMode(pumpPin, OUTPUT);
   pinMode(ledPin, OUTPUT);
 
-  // 初始化為非激活狀態
-  reward_L.write(90); 
-  reward_R.write(90); 
+  // 初始化為非激活狀態（360度連續旋轉伺服馬達需持續保持90度以停止）
+  reward_L.write(90);
+  reward_R.write(90);
   digitalWrite(pumpPin, HIGH);
   digitalWrite(ledPin, LOW);
 
@@ -121,6 +122,22 @@ void setup() {
 }
 
 void loop() {
+  // 偵測模式切換，在切換時處理伺服馬達
+  if (mode != lastMode) {
+    if (mode == 1) {
+      // 切換到左右模式時，重新連接伺服馬達並設為停止
+      reward_L.attach(10);
+      reward_R.attach(9);
+      reward_L.write(90);
+      reward_R.write(90);
+    } else {
+      // 切換到其他模式時，detach 伺服馬達以減少雜訊
+      reward_L.detach();
+      reward_R.detach();
+    }
+    lastMode = mode;
+  }
+
   if (mode == 1) {
     left_right();
   } else if (mode == 2) {
@@ -208,9 +225,9 @@ void processResponse(char response){
       isObstacle_R = true;
       blinking = false;
       reward_R.write(60);
-	    Serial.println("right reward start"); 
+	    Serial.println("right reward start");
 	    delay(reward_time);
-	    reward_R.write(90); 
+	    reward_R.write(90); // 360度伺服馬達需持續輸出90度以保持停止
       Serial.println("right reward finish");
       resetState(); // 重置狀態
     } else if (response == 'L' && ans == 1 && !isObstacle_L) {
@@ -219,9 +236,9 @@ void processResponse(char response){
       isObstacle_L = true;
       blinking = false;
       reward_L.write(114);
-	    Serial.println("left reward start"); 
+	    Serial.println("left reward start");
 	    delay(reward_time);
-	    reward_L.write(90); 
+	    reward_L.write(90); // 360度伺服馬達需持續輸出90度以保持停止
       Serial.println("left reward finish");
       resetState(); // 重置狀態
     } else if (response == 'R' && ans == 1) {
