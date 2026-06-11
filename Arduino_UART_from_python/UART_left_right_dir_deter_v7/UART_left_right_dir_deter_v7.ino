@@ -21,7 +21,7 @@ int currentPosR = posClose; // 記錄右門當前角度 (initial)
 
 //----- 定義模式二的pin腳 -----
 const int pumpPin = 5;
-const int ledPin = 6; // 用於 Mode 2 和 Mode 3 的給水提示燈
+const int ledPin = 7; // 用於 Mode 2 和 Mode 3 的給水提示燈(6,7)
 
 //----- 通用變數 -----
 char receivedChar; // 宣告字符變量
@@ -305,13 +305,13 @@ void moveServoSmooth(Servo &s, int from, int to) {
   
   if (from < to) { 
     // 若目標角度大於當前角度 (正轉)
-    for (int a = from; a <= to; a += 2) {
+    for (int a = from; a <= to; a += 5) {
       s.write(a);
       delay(10); 
     }
   } else { 
     // 若目標角度小於當前角度 (反轉)
-    for (int a = from; a >= to; a -= 2) {
+    for (int a = from; a >= to; a -= 5) {
       s.write(a);
       delay(10);
     }
