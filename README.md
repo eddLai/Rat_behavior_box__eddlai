@@ -1,5 +1,5 @@
 ## Now Operating Version...
-- **Arduino for Cue and Reward**: [`UART_left_right_dir_deter_v7.ino`](Arduino_UART_from_python/UART_left_right_dir_deter_v7/UART_left_right_dir_deter_v7.ino)
+- **Arduino for Cue and Reward**: [`UART_left_right_dir_deter_v8.ino`](Arduino_UART_from_python/UART_left_right_dir_deter_v8/UART_left_right_dir_deter_v8.ino)
 - **Camera for Rat Position**: [`python_to_detect_rat_at_point/two_camera_videos_diff_Uart_blah.py`](python_to_detect_rat_at_point/two_camera_videos_diff_Uart_blah.py)
 ---
 
@@ -15,6 +15,7 @@
 | **v5** | 伺服馬達版本 | 360伺服馬達 (servo) | 非阻塞式 (non-blocking) | 硬體更新 |
 | **v6** | 純左右轉模式 | 360伺服馬達 (servo) | 非阻塞式 (non-blocking) | 移除模式選擇 |
 | **v7** | 三向閥與純手動控制 | 180伺服馬達 (servo) | 非阻塞式 (non-blocking) | (1)平滑步進控制三向閥+齒輪開關 (2)新增修改起身模式、手動控制模式、排水模式 |
+| **v8** | 新增長距離移動/純轉向模式 | 180伺服馬達 (servo) | 非阻塞式 (non-blocking) | (1)新增 Mode 5：碰 L/R 直接給水，黑點 `D` 作為 rearm 防重複 (2)全部字串改用 `F()` 巨集釋放 SRAM (3)記憶體不足，暫時註解停用 Mode 2 |
 
 ---
 
@@ -165,6 +166,37 @@ Serial.println("Camera detection mode (left-right task) started automatically");
   - 輸入 `O`: 雙門全開。
   - 輸入 `C`: 雙門關閉。
   - 提示可隨時重啟序列埠來回到主選單。
+
+---
+
+### v8 - 長距離移動模式與記憶體 (SRAM) 優化版本
+**檔案位置**: `Arduino_UART_from_python/UART_left_right_dir_deter_v8/`
+
+**核心改進**:
+- ✅ **新增 Mode 5 (Long locomotion / pure turning)**: 適用於長距離移動與純轉向任務。
+  - 碰到 `L` 點 → 平滑開左門給水後關門；碰到 `R` 點 → 平滑開右門給水後關門。
+  - **與 Mode 1 的差異**: 不需 `M` 觸發、不指定方向、不判斷對錯 —— 碰到就給。
+- ✅ **Mode 5 防重複機制 (`armed` 狀態鎖)**: 解決「老鼠只觸發一次，馬達卻反覆開關多次」的問題。
+  - 根因：Python 端是逐幀送訊號，老鼠停在 L/R 點時會連續灌入大量 `L`/`R`，每個字元都觸發一次給水。
+  - 解法：用單一共用鎖 `armed`。給一次水後立即上鎖 (`armed = false`)，阻塞給水期間湧入的重複訊號全部忽略；**必須走過任一黑點（收到 `D`）才重新武裝** (`armed = true`)，才能再給下一次。
+  - 初始 `armed = true`，第一次碰 L/R 即給水。此設計逼老鼠實際跑完路線（黑點→L/R）才有獎勵，符合 locomotion 實驗本意。
+  - Arduino 端相容既有 Python：三個黑點 (MD/LD/RD) 都送 `D`，任一個都可 rearm。
+- ✅ **SRAM 記憶體優化（關鍵修正）**: 所有 `Serial.print/println` 字串改用 `F()` 巨集包裝。
+  - 問題：加入 Mode 5 後全域變數用到 **2047/2048 bytes (99%)**，開機時 stack 與全域變數相撞 → **選單完全印不出來、系統無反應**。
+  - 解法：`F("...")` 讓字串留在 Flash（32KB，充裕）而非複製到 SRAM（僅 2KB）。行為與輸出完全不變，只是搬移儲存位置。
+
+**⚠️ Mode 2 (自動站立) 暫時停用**:
+- 因 ATmega328P 的 SRAM 僅 2KB，為釋放記憶體空間，先將 `stand_up()` 函式及 `loop()` 內的 Mode 2 分支**註解掉**。
+- 開機選單仍列出 `Enter '2'`，但該模式功能尚未啟用。
+
+**Mode 對照表 (v8)**:
+| Mode | 功能 | 說明 |
+|------|------|------|
+| 1 | 攝影機偵測（左右轉） | 需 `M` 觸發、判斷對錯，走對邊才給水 |
+| 2 | ~~自動站立~~ | ⚠️ 暫時停用（記憶體不足） |
+| 3 | 手動控制 | 輸入 `1` 開右門+閃燈、`0` 關門 |
+| 4 | 排水 (Drain) | 輸入 `O` 雙門全開、`C` 雙門關閉 |
+| 5 | 長距離移動 / 純轉向 | 碰 `L`/`R` 直接給水，黑點 `D` 作為 rearm |
 
 ---
 

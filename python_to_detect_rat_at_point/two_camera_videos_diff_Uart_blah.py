@@ -103,6 +103,7 @@ def printCircles(frame, circle_list): # circle_list = circle_pos_list
     cv2.circle(frame, (circle_list[3][1], circle_list[3][2]), 15, (0, 0, 0), -1)   #black1 (MD)
     cv2.circle(frame, (circle_list[4][1], circle_list[4][2]), 15, (0, 0, 0), -1)   #black2 (LD)
     cv2.circle(frame, (circle_list[5][1], circle_list[5][2]), 15, (0, 0, 0), -1)   #black3 (RD)
+    cv2.circle(frame, (circle_list[6][1], circle_list[6][2]), 15, (0, 0, 0), -1)   #black4 (XD)
 
 def pin_output_ifs(x, y, distance_from_target=40):
     if np.abs(x - circle_pos_list[0][1]) < distance_from_target and np.abs(y - circle_pos_list[0][2]) < distance_from_target:
@@ -120,6 +121,10 @@ def pin_output_ifs(x, y, distance_from_target=40):
     elif np.abs(x - circle_pos_list[5][1]) < distance_from_target and np.abs(y - circle_pos_list[5][2]) < distance_from_target:
         send_signal_to_arduino(PORT, 115200, 'D')
         print("RD")
+
+    elif np.abs(x - circle_pos_list[6][1]) < distance_from_target and np.abs(y - circle_pos_list[6][2]) < distance_from_target:
+        send_signal_to_arduino(PORT, 115200, 'D')
+        print("XD")
     
     elif np.abs(x - circle_pos_list[4][1]) < distance_from_target and np.abs(y - circle_pos_list[4][2]) < distance_from_target:
         send_signal_to_arduino(PORT, 115200, 'D')
@@ -166,7 +171,9 @@ except FileNotFoundError:
     target_LD_y = 250
     target_RD_x = 300 # black qiu qiu 3
     target_RD_y = 300
-    circle_pos_list = [["M", target_M_x, target_M_y], ["L", target_L_x, target_L_y], ["R", target_R_x, target_R_y], ["MD", target_MD_x, target_MD_y], ["LD", target_LD_x, target_LD_y], ["RD", target_RD_x, target_RD_y]]
+    target_XD_x = 350 # black qiu qiu 4
+    target_XD_y = 350
+    circle_pos_list = [["M", target_M_x, target_M_y], ["L", target_L_x, target_L_y], ["R", target_R_x, target_R_y], ["MD", target_MD_x, target_MD_y], ["LD", target_LD_x, target_LD_y], ["RD", target_RD_x, target_RD_y], ["XD", target_XD_x, target_XD_y]]
 
 cut_start = 0
 cut_stop = 435
