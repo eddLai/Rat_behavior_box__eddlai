@@ -34,7 +34,8 @@ bool isObstacle_L = false;  // true when left correct response
 bool isObstacle_R = false;  // true when right correct response
 int ans = 0;  // 暫存此次trial應給水的位置
 int reward_time = 300;
-int reward_time_L = 500;
+int reward_time_R = 450;
+int reward_time_L = 150;
 bool taskInProgress = false;
 
 // 閃爍時仍可能延遲太久 導致下一個 L/R 指令在 loop 中被讀走但無法處理
@@ -366,7 +367,7 @@ void long_locomotion() {
       moveServoSmooth(reward_R, currentPosR, posOpen);
       currentPosR = posOpen;
 
-      delay(reward_time); // 給水/獎勵時間
+      delay(reward_time_R); // 給水/獎勵時間
 
       moveServoSmooth(reward_R, currentPosR, posClose);
       currentPosR = posClose;
